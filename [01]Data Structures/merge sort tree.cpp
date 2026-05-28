@@ -14,7 +14,7 @@ public:
     build (mid + 1, curRight, v, ryt);
     merge (all (Tree[lft]), all (Tree[ryt]), back_inserter (Tree[pos]));
   }
-  // count number of values less than k in [l, r] range
+  // count number of values less than or equal k in [l, r] range
   int query(int curLeft, int curRight, int l, int r, int k, int pos = 1) {
     if (r < curLeft or l > curRight or l > r) return 0;
     if (curLeft >= l and curRight <= r) return upper_bound (all (Tree[pos]), k) - Tree[pos].begin();

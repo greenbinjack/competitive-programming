@@ -2,7 +2,7 @@ const LL N = 1 << 18;
 const LL MOD = 786433;
 
 vector<LL> P[N];
-LL rev[N], w[N | 1], a[N], b[N], inv_n, g;
+LL rev[N], w[N | 1], a[N], b[N], inv_n, g = primitive_root (MOD);
 LL Pow(LL b, LL p) {
   LL ret = 1;
   while (p) {
@@ -54,7 +54,7 @@ void NTT(LL *a, LL n, LL dir = 0) {
   if (dir)
     for (LL i = 0; i < n; i++) a[i] = (inv_n * a[i]) % MOD;
 }
-vector<LL> mul(vector<LL> p, vector<LL> q) {
+vector<LL> multiply (vector<LL> p, vector<LL> q) {
   LL n = p.size(), m = q.size();
   LL t = n + m - 1, sz = 1;
   while (sz < t) sz <<= 1;

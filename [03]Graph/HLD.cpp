@@ -35,8 +35,9 @@ class HLD {
     end[v] = euler.size() - 1;
   }
 
- public:
-  HLD(int n, const vector<vector<int>> &adj, vector<LL> &v) : n(n), parent(n), depth(n), heavy(n, -1), head(n), pos(n), start(n), end(n), cur_pos(0), segTree(v, 0) {
+public:
+  HLD(int n, const vector<vector<int>> &adj, vector<LL> &v) 
+    : n(n), parent(n), depth(n), heavy(n, -1), head(n), pos(n), start(n), end(n), cur_pos(0), segTree(v, 0) {
     parent[0] = -1;
     depth[0] = 0;
     dfs(0, adj);

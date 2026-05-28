@@ -85,4 +85,22 @@ struct Trie {
     return ans;
   }
 
+  // number of val such that (val ^ x < k)
+  int less_query (int x, int k) {
+    node* cur = root;
+    int ans = 0;
+    for (int bit = B - 1; bit >= 0; bit--) {
+      if (cur == NULL) break;
+      int xb = (x >> bit) & 1;
+      int kb = (k >> bit) & 1;
+      if (kb) {
+        if (cur->nxt[xb]) ans += cur->nxt[xb]->sz;
+        cur = cur->nxt[xb ^ 1];
+      } else {
+        cur = cur->nxt[xb];
+      }
+    }
+    return ans;
+  }
+
 };

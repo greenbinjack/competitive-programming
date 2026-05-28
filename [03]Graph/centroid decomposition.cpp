@@ -31,6 +31,7 @@ void build (int u = 1, int p = 0) {
   pa[u] = c;
 
   // do something
+  
 
   for (auto next : G[c]) {
     if (!processed[next]) build (next, c);

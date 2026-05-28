@@ -1,49 +1,20 @@
-#include <bits/stdc++.h>
-using namespace std;
-using pii = pair <long long,int>;
-/*
-In this ques the k-th shortest path might be equal to the shortest path as well assuming k paths are equally short
-some varients may require that n-th shortest path>(n-1)-th shortest path
-*/
-using LL = long long;
-void K_shortest(int n,int m){
-	int st,des,k,u,v;
-	LL w;
-	scanf("%d%d%d", &st,&des,&k);
-	st--,des--;
-	vector <vector<pii > > edges(n);
-	for(int i=0;i<m;i++){
-		scanf("%d%d%lld", &u,&v,&w);
-		u--,v--;
-		edges[u].push_back({w,v});
-	}
-	vector < vector <LL> > dis(n,vector <LL> (k+1,1e8));
-	vector <int> vis(n); 
-	priority_queue <pii ,vector <pii >, greater< pii > > q;
-
-	q.emplace(0LL,st);
-	while(!q.empty()){
-		v = q.top().second, w = q.top().first;
-		q.pop();
-		if(vis[v]>=k) continue;
-		// for the varient, check if this path is greater than previous, if not, continue
-		//if(vis[v]>0 && w == dis[v][vis[v]-1]) continue; 
-		dis[v][vis[v]] = w; 
-		vis[v]++;
-		for(auto nd:edges[v]){
-			q.emplace(w+nd.first,nd.second);
-		}
-	}
-	LL ans = dis[des][k-1];
-	if(ans == 1e8) ans = -1;
-	printf("%lld\n", ans);
+int n, m, k; cin >> n >> m >> k;
+vector<pair<int, int>> g[n + 1];
+for(int i = 0; i < m; i++){
+    int u, v, w; cin >> u >> v >> w;
+    g[u].push_back({v, w});
+    g[v].push_back({u, w});
 }
-int main() {
-	int t = 1,n,m; 
-	scanf("%d%d", &n,&m);
-	while(n||m){
-		K_shortest(n,m);
-		scanf("%d%d", &n,&m);
-	}
-	return 0;
+priority_queue<pair<LL, LL>, vector<pair<LL, LL>>, greater<pair<LL, LL>>> pq;
+pq.push({0, 1});
+vector<vector<LL>> dis(n + 1, vector<LL> (k + 1, INF));
+vector<int> vis(n + 1);
+while(not pq.empty()){
+  auto [c, u] = pq.top(); pq.pop();
+  if(vis[u] >= k) continue;
+  vis[u]++;
+  dis[u][vis[u]] = c;
+  for(auto [v, w]: g[u]){
+    pq.push({c + w, v});
+  }
 }

@@ -10,13 +10,18 @@ vector<int> prefix_function(string &s) {
   }
   return pi;
 }
-vector<int> KMP(string &text, string &pattern) {
-  string full = pattern + "#" + text;
-  int n = pattern.size();
-  auto pi = prefix_function(full);
-  vector<int> occur;
-  for(int i = n + 1; i < full.size(); i++) {
-    if(pi[i] == n) occur.push_back(i - 2 * n); 
+
+int aut[N][26];
+void compute_automaton(string s) {
+  s += '#';
+  int n = (int)s.size();
+  vector<int> pi = prefix_function(s);
+  for (int i = 0; i < n; i++) {
+    for (int c = 0; c < 26; c++) {
+      if (i > 0 && 'a' + c != s[i])
+        aut[i][c] = aut[pi[i - 1]][c];
+      else
+        aut[i][c] = i + ('a' + c == s[i]);
+    }
   }
-  return occur;
 }

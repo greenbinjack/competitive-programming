@@ -56,8 +56,8 @@ void update(int id, int le, int ri, int l, int r, U val) {
 
 T query(int id, int le, int ri, int l, int r) {
   push(id, le, ri);
-  if (r < le || l > ri) return I;           // No overlap
-  if (l <= le && ri <= r) return Tree[id];  // Total overlap
+  if (r < le || l > ri) return I;           /// No overlap
+  if (l <= le && ri <= r) return Tree[id];  /// Total overlap
   int mid = (le + ri) / 2;
   return merge(query(2 * id, le, mid, l, r), query(2 * id + 1, mid + 1, ri, l, r));
 }
@@ -126,16 +126,51 @@ void update_path (int a, int b, LL val) {
   update(Pos[a] + WEIGHT_IN_EDGE, Pos[b], val);
 }
 
-LL query_path (int a, int b) {
-  LL res = 0;
-  while (Head[a] != Head[b]) {
-    if (Depth[Head[a]] < Depth[Head[b]]) swap(a, b);
-    res = merge (res, query(Pos[Head[a]], Pos[a]));
-    a = Parent[Head[a]];
+// LL query_path (int a, int b) {
+//   LL res = 0;
+//   while (Head[a] != Head[b]) {
+//     if (Depth[Head[a]] < Depth[Head[b]]) swap(a, b);
+//     res = merge (res, query(Pos[Head[a]], Pos[a]));
+//     a = Parent[Head[a]];
+//   }
+//   if (Depth[a] > Depth[b]) swap(a, b);
+//   res = merge (res, query(Pos[a] + WEIGHT_IN_EDGE, Pos[b]));
+//   return res;
+// }
+
+vector <T> query_up(int u, int anc) {
+  vector <T> res;
+  while (Head[u] != Head[anc]) {
+    res.emplace_back (query(Pos[Head[u]], Pos[u]));
+    u = Parent[Head[u]];
   }
-  if (Depth[a] > Depth[b]) swap(a, b);
-  res = merge (res, query(Pos[a] + WEIGHT_IN_EDGE, Pos[b]));
+  res.emplace_back (query(Pos[anc] + 1, Pos[u]));
   return res;
+}
+
+LL query_path(int u, int v) {
+  int w = LCA:: lca(u, v);
+
+  auto left  = query_up(u, w); 
+  auto right = query_up(v, w); 
+
+  node res = I;
+  for (auto e : left) {
+    res = merge (e, res);
+  }
+  if (not WEIGHT_IN_EDGE) {
+    res = merge(query(Pos[w], Pos[w]), res);
+  }
+  swap (res.AP, res.PA);
+
+  auto res2 = I;
+  for (auto e : right) {
+    res2 = merge (e, res2); 
+  }
+
+  res = merge (res, res2);
+
+  return max ({res.PP, res.PA, res.AP, res.AA});
 }
 
 void update_subtree (int v, LL val) { update(Start[v], End[v], val); }

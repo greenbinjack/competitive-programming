@@ -22,7 +22,8 @@ Matrix<DT> multiply(const Matrix<DT>& a, const Matrix<DT>& b, LL MOD) {
     for (int j = 0; j < m; j++) {
       DT temp = 0;
       for (int k = 0; k < s; k++) {
-        temp = (temp + 1LL * matA[i][k] * matB[k][j] % MOD) % MOD;
+        temp = (temp + 1LL * matA[i][k] * matB[k][j] % MOD);
+        if (temp >= MOD) temp -= MOD;
       }
       result.mat[i][j] = temp;
     }
